@@ -14,6 +14,7 @@
 //
 #include <fstream>
 #include <cstdio>
+#include <cctype>
 #include "param.h"
 #include "common.h"
 
@@ -85,8 +86,8 @@ bool Param::load(const char *filename) {
     CHECK_FALSE(pos != std::string::npos) << "format error: " << line;
 
     size_t s1, s2;
-    for (s1 = pos+1; s1 < line.size() && isspace(line[s1]); s1++);
-    for (s2 = pos-1; static_cast<long>(s2) >= 0 && isspace(line[s2]); s2--);
+    for (s1 = pos+1; s1 < line.size() && std::isspace(line[s1]); s1++);
+    for (s2 = pos-1; static_cast<long>(s2) >= 0 && std::isspace(line[s2]); s2--);
     std::string value = line.substr(s1, line.size() - s1);
     std::string key   = line.substr(0, s2 + 1);
     set<std::string>(key.c_str(), value, false);
@@ -206,11 +207,11 @@ bool Param::open(const char *arg, const Option *opts) {
   ptr[0] = const_cast<char*>(PACKAGE);
 
   for (char *p = str; *p;) {
-    while (isspace(*p)) *p++ = '\0';
+    while (std::isspace(*p)) *p++ = '\0';
     if (*p == '\0') break;
     ptr[size++] = p;
     if (size == sizeof(ptr)) break;
-    while (*p && !isspace(*p)) p++;
+    while (*p && !std::isspace(*p)) p++;
   }
 
   return open(size, ptr, opts);

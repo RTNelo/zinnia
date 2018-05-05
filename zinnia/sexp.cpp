@@ -7,6 +7,7 @@
 //
 #include <iostream>
 #include <string>
+#include <cctype>
 #include "sexp.h"
 
 namespace zinnia {
@@ -76,7 +77,7 @@ int Sexp::next_token(char **begin, const char *end, const char n) {
   do {
     c = **begin;
     ++(*begin);
-  } while (isspace(c));
+  } while (std::isspace(c));
 
   if (*begin >= end) {
     return -1;
@@ -134,7 +135,7 @@ const Sexp::Cell *Sexp::read_atom(char **begin, const char *end) {
   char c = **begin;
   const char *p = *begin;
   ++(*begin);
-  if (isspace(c) || c == '(' || c == ')') {
+  if (std::isspace(c) || c == '(' || c == ')') {
     return 0;
   } else if (*begin >= end) {
     return 0;
@@ -142,7 +143,7 @@ const Sexp::Cell *Sexp::read_atom(char **begin, const char *end) {
     while (true) {
       c = **begin;
       ++(*begin);
-      if (isspace(c) || c == '(' || c == ')' || *begin >= end) {
+      if (std::isspace(c) || c == '(' || c == ')' || *begin >= end) {
         --(*begin);
         const size_t length = static_cast<size_t>(*begin - p);
         char *tmp = char_freelist_.alloc(length + 1);
